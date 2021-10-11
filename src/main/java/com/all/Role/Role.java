@@ -17,7 +17,7 @@ public class Role {
     @Column(unique = true)
     private String role;
 
-    @ManyToMany(targetEntity = Person.class, mappedBy = "roles", cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = Person.class, cascade = CascadeType.ALL, mappedBy = "roles")
     private List<Person> persons;
 
 }
