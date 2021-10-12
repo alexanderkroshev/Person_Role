@@ -5,8 +5,6 @@ import com.all.Role.Role;
 import com.all.Role.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 import java.util.List;
 
 @Service

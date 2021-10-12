@@ -21,6 +21,7 @@ public class Person {
     private String name;
 
     @NotNull
+    @ValidPassword
     private String password;
 
     @ManyToMany(targetEntity = Role.class, cascade = CascadeType.ALL)
