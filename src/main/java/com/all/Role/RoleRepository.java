@@ -8,6 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
+    @Transactional(readOnly = true)
+    @Query(value ="EXISTS (select * from role where role= :role", nativeQuery = true)
+    boolean roleIsExist(@Param("role") String role);
+
+
     @Query(value ="SELECT * FROM role where role= :role", nativeQuery = true)
     @Transactional
     Role findRoleByName(@Param("role") String role);

@@ -8,18 +8,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PersonService {
+public class PersonAndRoleService {
 
     private final PersonRepository personRepository;
     private final RoleRepository roleRepository;
 
 
     @Autowired
-    public PersonService(PersonRepository personRepository, RoleRepository roleRepository) {
+    public PersonAndRoleService(PersonRepository personRepository, RoleRepository roleRepository) {
         this.personRepository = personRepository;
         this.roleRepository = roleRepository;
     }
-
     public List<Person> findAll() {
         return personRepository.findAll();
     }
@@ -39,6 +38,4 @@ public class PersonService {
     public void savePerson(Person person){
         personRepository.save(person);
     }
-
-
 }

@@ -9,32 +9,33 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/persons")
 public class PersonController {
 
-    private final PersonService personService;
+    private final PersonAndRoleService personAndRoleService;
 
     @Autowired
-    public PersonController(PersonService personService) {
-        this.personService = personService;
+    public PersonController(PersonAndRoleService personAndRoleService) {
+        this.personAndRoleService = personAndRoleService;
     }
 
     @GetMapping("/all")
     public List<String> getAllPerson() {
-        return personService.findAll().stream()
+        return personAndRoleService.findAll().stream()
                 .map(Person::getNickname).collect(Collectors.toList());
     }
 
     @GetMapping("/{nickname}")
     public PersonResponse getByNickname(@PathVariable("nickname") String nickname) {
-        return PersonResponse.fromPerson(personService.findPersonByNickname(nickname));
+        return PersonResponse.fromPerson(personAndRoleService.findPersonByNickname(nickname));
     }
 
     @PostMapping("/new_person")
-    public void createPerson( @RequestParam("nickname") String nickname,
+    public void createPerson(@RequestParam("nickname") String nickname,
                               @RequestParam("password") String password,
                               @RequestParam("name") String name,
                               @RequestParam("roles") List<String> roles) {
+  //      personAndRoleService.
         Person person = new Person();
         person.setNickname(nickname);
         person.setPassword(password);
@@ -42,36 +43,36 @@ public class PersonController {
         List<Role> rolesList = new ArrayList<>();
         Role role;
         for (String i : roles) {
-            role = personService.findRoleByName(i);
+            role = personAndRoleService.findRoleByName(i);
             rolesList.add(role);
         }
         person.setRoles(rolesList);
-        personService.savePerson(person);
+        personAndRoleService.savePerson(person);
     }
 
-    @PutMapping("/update_user/{nickname}")
+    @PutMapping("/update_person/{nickname}")
     public void updatePerson(@PathVariable String nickname,
                              @RequestParam("password") String updatePassword,
                              @RequestParam("name") String updateName,
                              @RequestParam("roles") List<String> updateRoles
                              ) {
-        Person person = personService.findPersonByNickname(nickname);
+        Person person = personAndRoleService.findPersonByNickname(nickname);
         person.setPassword(updatePassword);
         person.setName(updateName);
         List<Role> rolesList = new ArrayList<>();
         Role role;
         for (String i : updateRoles) {
-            role = personService.findRoleByName(i);
+            role = personAndRoleService.findRoleByName(i);
             rolesList.add(role);
         }
         person.setRoles(rolesList);
-        personService.savePerson(person);
+        personAndRoleService.savePerson(person);
     }
 
-    @DeleteMapping("/delete_user/{nickname}")
+    @DeleteMapping("/delete_person/{nickname}")
     public void deletePerson(@PathVariable String nickname) {
-        Person person = personService.findPersonByNickname(nickname);
-        personService.deletePerson(person);
+        Person person = personAndRoleService.findPersonByNickname(nickname);
+        personAndRoleService.deletePerson(person);
     }
 
 }
