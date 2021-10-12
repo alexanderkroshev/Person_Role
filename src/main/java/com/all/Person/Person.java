@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
@@ -13,14 +14,17 @@ import java.util.List;
 public class Person {
 
     @Id
-    @Column(unique = true)
-    @NotNull
+    @Column(unique = true, nullable = false)
+    @NotEmpty
     private String nickname;
 
     @NotNull
+    @NotEmpty
+    @Column(nullable = false)
     private String name;
 
     @NotNull
+    @NotEmpty
     @ValidPassword
     private String password;
 
