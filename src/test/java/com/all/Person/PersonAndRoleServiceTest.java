@@ -36,6 +36,7 @@ import static org.mockito.BDDMockito.given;
 @DataJpaTest
 class PersonAndRoleServiceTest {
 
+    //Working, but code not optimized!!!
 
     @Autowired
     protected RoleRepository roleRepository;
