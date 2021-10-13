@@ -2,7 +2,6 @@ package com.all.Person;
 
 import com.all.Role.Role;
 import com.all.Role.RoleRepository;
-import com.google.common.util.concurrent.Service;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,98 +16,72 @@ import org.mockito.Mockito;
 
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
-@DataJpaTest
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
 class PersonAndRoleServiceTest {
 
-    //Working, but code not optimized!!!
 
     @Autowired
-    protected RoleRepository roleRepository;
-    @Autowired
-    protected PersonRepository personRepository;
-
-    @Before
-    public void setUp() {
-        Role role = new Role();
-        role.setId(10L);
-        role.setRole("admin");
-
-        List<Role> roleList = new ArrayList<>();
-        roleList.add(role);
-
-        Person person = new Person();
-        String nickname = "Vlad_95";
-        person.setNickname(nickname);
-        person.setName("vlad");
-        person.setPassword("pass3D");
-        person.setRoles(roleList);
-        given(this.roleRepository.findRoleByName(role.getRole())).willReturn(role);
-        given(this.personRepository.findPersonByNickname(nickname)).willReturn(person);
-        given(this.personRepository.save(person)).willReturn(person);
-    }
+    protected PersonAndRoleService service;
 
     @Test
     void findPersonByNickname() {
         String nickname = "Vlad_95";
-        Person person = new Person();
-        person.setNickname(nickname);
-        person.setName("vlad");
-        person.setPassword("pass3Dee");
-        this.personRepository.save(person);
-        Person person2 = this.personRepository.findPersonByNickname(nickname);
+        Person person2 = this.service.findPersonByNickname(nickname);
         assertThat(person2.getNickname()).isEqualTo(nickname);
     }
 
+    @Before
+    void setUp(){
+     //  дописать события до
+    }
     @Test
     void findRoleByName() {
         String name = "admin";
-        Role role = new Role();
-        role.setId(10L);
-        role.setRole(name);
-        roleRepository.save(role);
-
-        Role role1 = roleRepository.findRoleByName(name);
+        Role role1 = service.findRoleByName(name);
         assertThat(role1.getRole()).isEqualTo(name);
     }
 
     @Test
     void savePerson() {
-        String nickname = "Vlad_95";
+
         Person person = new Person();
+        String nickname = "Vlad_95hgjgj";
         person.setNickname(nickname);
         person.setName("vlad");
         person.setPassword("pass3D");
-        personRepository.save(person);
 
-        Person person2 = personRepository.findPersonByNickname(nickname);
-        assertThat(personRepository.save(person2)).isEqualTo(person);
+
+        service.savePerson(person);
+        Person person2 = service.findPersonByNickname(nickname);
+        assertThat(person2.getNickname()).isEqualTo(nickname);
     }
 
     @Test
     void deletePerson() {
-        String nickname = "Vlad_95";
-        Person person = new Person();
-        person.setNickname(nickname);
-        person.setName("vlad");
-        person.setPassword("pass3Dee");
-        this.personRepository.save(person);
-        this.personRepository.delete(person);
-        assertThat(this.personRepository.findPersonByNickname(nickname)).isNull();
+        Person person = service.findPersonByNickname("Vlad_9532");
+        this.service.deletePerson(person);
+        assertThat(this.service.findPersonByNickname("Vlad_9532")).isNull();
     }
 }
