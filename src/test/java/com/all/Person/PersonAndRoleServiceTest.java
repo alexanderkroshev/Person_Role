@@ -36,36 +36,31 @@ import static org.mockito.BDDMockito.given;
 @DataJpaTest
 class PersonAndRoleServiceTest {
 
+
     @Autowired
     protected RoleRepository roleRepository;
     @Autowired
     protected PersonRepository personRepository;
 
+    @Before
+    public void setUp() {
+        Role role = new Role();
+        role.setId(10L);
+        role.setRole("admin");
 
-//    @Before
-//    public void setUp() {
-//        Role role = new Role();
-//        role.setId(10L);
-//        role.setRole("admin");
-//
-//        List<Role> roleList = new ArrayList<>();
-//        roleList.add(role);
-//
-//        Person person = new Person();
-//        String nickname = "Vlad_95";
-//        person.setNickname(nickname);
-//        person.setName("vlad");
-//        person.setPassword("pass3D");
-//        person.setRoles(roleList);
-//        given(this.roleRepository.findRoleByName(role.getRole())).willReturn(role);
-//       given(this.personRepository.findPersonByNickname(nickname)).willReturn(person);
-//        given(this.personRepository.save(person)).willReturn(person);
-//    }
+        List<Role> roleList = new ArrayList<>();
+        roleList.add(role);
 
-//    @Test
-//    void deletePerson() {
-//
-//    }
+        Person person = new Person();
+        String nickname = "Vlad_95";
+        person.setNickname(nickname);
+        person.setName("vlad");
+        person.setPassword("pass3D");
+        person.setRoles(roleList);
+        given(this.roleRepository.findRoleByName(role.getRole())).willReturn(role);
+        given(this.personRepository.findPersonByNickname(nickname)).willReturn(person);
+        given(this.personRepository.save(person)).willReturn(person);
+    }
 
     @Test
     void findPersonByNickname() {
@@ -81,10 +76,14 @@ class PersonAndRoleServiceTest {
 
     @Test
     void findRoleByName() {
-        Role role = roleRepository.findRoleByName("admin");
+        String name = "admin";
+        Role role = new Role();
+        role.setId(10L);
+        role.setRole(name);
+        roleRepository.save(role);
 
-//        role.setId(10L);
-//        role.setRole("admin");
+        Role role1 = roleRepository.findRoleByName(name);
+        assertThat(role1.getRole()).isEqualTo(name);
     }
 
     @Test
@@ -98,5 +97,17 @@ class PersonAndRoleServiceTest {
 
         Person person2 = personRepository.findPersonByNickname(nickname);
         assertThat(personRepository.save(person2)).isEqualTo(person);
+    }
+
+    @Test
+    void deletePerson() {
+        String nickname = "Vlad_95";
+        Person person = new Person();
+        person.setNickname(nickname);
+        person.setName("vlad");
+        person.setPassword("pass3Dee");
+        this.personRepository.save(person);
+        this.personRepository.delete(person);
+        assertThat(this.personRepository.findPersonByNickname(nickname)).isNull();
     }
 }
